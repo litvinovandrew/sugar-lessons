@@ -1,0 +1,83 @@
+Hi!
+
+We have custom module called : SugaReachContactEvents
+This module has flex relate field
+
+Lets try to add a subpanel to the related module MANUALLY
+
+Because if we create the relationship in the studio - it will add extra tables. And we don't want this.
+
+
+Lets go!
+
+
+Step 1 Create related records
+
+
+Step 2 : Add link definition to the our custom module ca_SugarReachContactEvent
+/home/lee/projects/main/sugar90/custom/Extension/modules/ca_SugarReachContactEvent/Ext/Vardefs/link_definition_for_Leads.php
+
+<?php
+$dictionary['ca_SugarReachContactEvent']['fields']['leads'] = [
+    'name' => 'leads',
+    'type' => 'link',
+    'relationship' => 'events_leads',
+    'module' => 'Leads',
+    'bean_name' => 'Lead',
+    'source' => 'non-db',
+    'vname' => 'LBL_Leads',
+];
+
+Step 3 : Add relationship definition to the our custom module
+/home/lee/projects/main/sugar90/custom/Extension/modules/ca_SugarReachContactEvent/Ext/Vardefs/relationship_definition_for_Leads.php
+
+<?php
+
+$dictionary['ca_SugarReachContactEvent']['relationships']['events_leads'] = array(
+    'lhs_module' => 'Leads',
+    'lhs_table' => 'leads',
+    'lhs_key' => 'id',
+    'rhs_module' => 'ca_SugarReachContactEvent',
+    'rhs_table' => 'ca_sugareach_contact_event',
+    'rhs_key' => 'parent_id',
+    'relationship_type' => 'one-to-many',
+);
+
+Step 4 : Add link definition to the main module (Leads)
+/home/lee/projects/main/sugar90/custom/Extension/modules/Leads/Ext/Vardefs/link_definition_for_events.php
+
+<?php
+$dictionary['Lead']['fields']['lead_events'] =  array(
+    'name' => 'lead_events',
+    'type' => 'link',
+    'relationship' => 'events_leads',  //this is the name of the link from the related module
+    'module' => 'ca_SugarReachContactEvent',
+    'bean_name' => 'ca_SugarReachContactEvent',
+    'source' => 'non-db',
+    'vname' => 'LBL_EVENTS_MODULE_REL',
+);
+
+
+Step 5 : Add language file
+/home/lee/projects/main/sugar90/custom/Extension/modules/Leads/Ext/Language/en_us.custom_relationship.php
+<?php
+$mod_strings['LBL_EVENTS_SUBPANEL_TITLE'] = 'Events';
+
+
+Step 6 : add layout to the main module (Leads)
+/home/lee/projects/main/sugar90/custom/Extension/modules/Leads/Ext/clients/base/layouts/subpanels/events_subpanel.php
+<?php
+$viewdefs['Leads']['base']['layout']['subpanels']['components'][] = [
+
+    'layout' => 'subpanel',
+    'label' => 'LBL_EVENTS_SUBPANEL_TITLE',
+    'context' => [
+        'link' => 'lead_events',
+    ],
+
+];
+
+
+Do repair.
+
+Whooooooo! Yes!!
