@@ -1,7 +1,7 @@
 Hi!
 
 We have custom module called : SugaReachContactEvents
-This module has flex relate field
+This module has flex relate field (parent_type, parent_id in the database)
 
 Lets try to add a subpanel to the related module MANUALLY
 
