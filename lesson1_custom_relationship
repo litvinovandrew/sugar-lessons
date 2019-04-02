@@ -81,3 +81,8 @@ $viewdefs['Leads']['base']['layout']['subpanels']['components'][] = [
 Do repair.
 
 Whooooooo! Yes!!
+
+links : 
+https://community.sugarcrm.com/thread/27598
+http://www.dobre.name/sugarcrm/how-to-create-an-one-to-many-relationship-without-intermediate-table-in-sugarcrm.html
+
