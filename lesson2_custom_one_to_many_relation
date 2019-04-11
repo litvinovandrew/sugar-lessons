@@ -1,0 +1,63 @@
+One Side
+========
+
+1) Link Definition
+'fields' => [
+    ...
+    'custom_modules' => [
+                'name' => 'custom_modules',
+                'type' => 'link',
+                'relationship' => 'custom_modules',  //this is the name of the link from the related module
+                'module' => 'mycrm_CustomModule',
+                'bean_name' => 'mycrm_CustomModule',
+                'source' => 'non-db',
+                'vname' => 'LBL_CUSTOM_MODULE_REL',
+            ]
+ ], 
+        
+2) Relationship Definition
+'relationships' => [
+        ...
+        'custom_modules' => [
+            'lhs_module' => 'MyCRM_MyCRMadminMasterDB',
+            'lhs_table' => 'mycrm_mycrmadminmasterdb',
+            'lhs_key' => 'id',
+            'rhs_module' => 'mycrm_CustomModule',
+            'rhs_table' => 'mycrm_custommodule',
+            'rhs_key' => 'instance_id',
+            'relationship_type' => 'one-to-many',
+        ]
+    ],
+
+3) Put Subpanel to the layout (src/custom/Extension/modules/MyCRM_MyCRMadminMasterDB/Ext/clients/base/layouts/subpanels)
+<?php
+$viewdefs['MyCRM_MyCRMadminMasterDB']['base']['layout']['subpanels']['components'][] = [
+
+    'layout' => 'subpanel',
+    'label' => 'LBL_MODULES_SUBPANEL_TITLE',
+    'context' => [
+        'link' => 'custom_modules',
+    ],
+
+];
+
+
+
+Many Side
+=========
+1) Link Definition
+'fields' => [
+    ...
+     'instance' => [
+            'name' => 'instance',
+            'type' => 'link',
+            'relationship' => 'custom_modules',  //this is the name of the link from the related module
+            'module' => 'MyCRM_MyCRMadminMasterDB',
+            'bean_name' => 'MyCRM_MyCRMadminMasterDB',
+            'source' => 'non-db',
+            'vname' => 'LBL_EVENTS_MODULE_REL',
+        ]
+ ], 
+
+
+
