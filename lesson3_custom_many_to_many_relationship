@@ -1,0 +1,174 @@
+Imagine that we have two modules and we want to add many-to-many relationship between this modules
+
+
+
+1) Define relationship metadata. Put file to the ./custom/metadata
+
+```php
+<?php
+// created: 2019-04-10 17:55:13
+$dictionary["links_leads"] = [
+    'true_relationship_type' => 'many-to-many',
+    'from_studio' => true,
+    'relationships' =>
+        [
+            'links_leads' =>
+                [
+                    'lhs_module' => 'ca_SugarReachCampaignLink',
+                    'lhs_table' => 'ca_sugarreachcampaign_link',
+                    'lhs_key' => 'id',
+                    'rhs_module' => 'Leads',
+                    'rhs_table' => 'leads',
+                    'rhs_key' => 'id',
+                    'relationship_type' => 'many-to-many',
+                    'join_table' => 'ca_sugarreachcampaign_link_leads',
+                    'join_key_lhs' => 'link_id',
+                    'join_key_rhs' => 'lead_id',
+                ],
+        ],
+    'table' => 'ca_sugarreachcampaign_link_leads',
+    'fields' =>
+        [
+            'id' =>
+                [
+                    'name' => 'id',
+                    'type' => 'id',
+                ],
+            'date_modified' =>
+                [
+                    'name' => 'date_modified',
+                    'type' => 'datetime',
+                ],
+            'deleted' =>
+                [
+                    'name' => 'deleted',
+                    'type' => 'bool',
+                    'default' => 0,
+                ],
+            'link_id' =>
+                [
+                    'name' => 'link_id',
+                    'type' => 'id',
+                ],
+            'lead_id' =>
+                [
+                    'name' => 'lead_id',
+                    'type' => 'id',
+                ],
+        ],
+    'indices' =>
+        [
+            [
+                'name' => 'idx_links_contacts_pk',
+                'type' => 'primary',
+                'fields' =>
+                    [
+                        0 => 'id',
+                    ],
+            ],
+            [
+                'name' => 'idx_links_contacts_ida1_deleted',
+                'type' => 'index',
+                'fields' =>
+                    [
+                        0 => 'link_id',
+                        1 => 'deleted',
+                    ],
+            ],
+            [
+                'name' => 'idx_links_contacts_idb2_deleted',
+                'type' => 'index',
+                'fields' =>
+                    [
+                        0 => 'lead_id',
+                        1 => 'deleted',
+                    ],
+            ],
+            [
+                'name' => 'links_contacts_alt',
+                'type' => 'alternate_key',
+                'fields' =>
+                    [
+                        0 => 'link_id',
+                        1 => 'lead_id',
+                    ],
+            ],
+        ],
+];
+```
+
+1.1) Include metadata to the application custom/Extension/application/Ext/TableDictionary/links_leads.php
+```php
+<?php 
+ //WARNING: The contents of this file are auto-generated
+include('custom/metadata/links_leads_m2m_rel.php');
+
+?>
+
+
+```
+
+2) Add link definition to the first table
+```php
+<?php
+// created: 2019-04-10 17:55:13
+$dictionary["ca_SugarReachCampaignLink"]["fields"]["links_leads"] = array (
+    'name' => 'links_leads',
+    'type' => 'link',
+    'relationship' => 'links_leads',
+    'source' => 'non-db',
+    'module' => 'Leads',
+    'bean_name' => 'Leads',
+    'vname' => 'LBL_LEAD_REL',
+    'id_name' => 'lead_id',
+);
+
+```
+
+3) Add link definition to the second table
+```php
+<?php
+// created: 2019-04-10 17:55:13
+$dictionary["Lead"]["fields"]["links_leads"] = array (
+    'name' => 'links_leads',
+    'type' => 'link',
+    'relationship' => 'links_leads',
+    'source' => 'non-db',
+    'module' => 'ca_SugarReachCampaignLink',
+    'bean_name' => 'ca_SugarReachCampaignLink',
+    'vname' => 'LBL_LINKS_REL',
+    'id_name' => 'link_id',
+);
+
+```
+
+4) Add subpanel to first module
+5) Add subpanel to the second module
+```php
+<?php
+ // created: 2019-04-10 17:55:13
+$layout_defs["ca_SugarReachCampaignLink"]["subpanel_setup"]['links_contacts'] = array (
+  'order' => 100,
+  'module' => 'ca_SugarReachContact',
+  'subpanel_name' => 'default',
+  'sort_order' => 'asc',
+  'sort_by' => 'id',
+  'title_key' => 'LBL_CA_SUGARREACHCAMPAIGNLINK_CA_SUGARREACHCONTACT_1_FROM_CA_SUGARREACHCONTACT_TITLE',
+  'get_subpanel_data' => 'links_contacts',
+  'top_buttons' => 
+  array (
+    0 => 
+    array (
+      'widget_class' => 'SubPanelTopButtonQuickCreate',
+    ),
+    1 => 
+    array (
+      'widget_class' => 'SubPanelTopSelectButton',
+      'mode' => 'MultiSelect',
+    ),
+  ),
+);
+
+```
+
+Do repair!
