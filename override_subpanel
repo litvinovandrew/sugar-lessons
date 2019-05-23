@@ -1,0 +1,21 @@
+Correct way to override subpanel:
+
+- What is the parent module? 
+- myprm_Project
+-Ok , go to custom/modules/myprm_Project/Ext/clients/base/layout/subpanels/subpanels.ext.php
+- ok done
+- Subpanel of what module do you want to override ?
+- Bugs
+- Find in the file a text "'link' => 'myprm_project_bugs',"
+- Ok
+- You can see that there is block of code
+$viewdefs['myprm_Project']['base']['layout']['subpanels']['components'][]['override_subpanel_list_view'] = array (
+  'link' => 'myprm_project_bugs',
+  'view' => 'subpanel-for-myprm_project-myprm_project_bugs',
+);
+So we found a view responsible for the subpanel. It is "subpanel-for-myprm_project-myprm_project_bugs"
+
+- What should I do next?
+
+- Go to custom/modules/Bugs/clients/base/views/subpanel-for-myprm_project-myprm_project_bugs/subpanel-for-myprm_project-myprm_project_bugs.php and change it
+
