@@ -19,3 +19,59 @@ So we found a view responsible for the subpanel. It is "subpanel-for-myprm_proje
 
 - Go to custom/modules/Bugs/clients/base/views/subpanel-for-myprm_project-myprm_project_bugs/subpanel-for-myprm_project-myprm_project_bugs.php and change it
 
+- Is it possible to override not here, not directly in the view file but with Extension framework ?
+
+- Lets try to set rowactions with Extension framework  :
+  Go to custom/Extension/modules/Bugs/Ext/clients/base/views
+  Create folder with file subpanel-for-myprm_project-myprm_project_bugs/subpanel-for-myprm_project-myprm_project_bugs.php
+  
+  Put into the file 
+  $viewdefs['Bugs']['base']['view']['subpanel-for-myprm_project-myprm_project_bugs']['rowactions'] =
+    [
+        'actions' =>
+            [
+                0 =>
+                    [
+                        'type' => 'rowaction',
+                        'css_class' => 'btn',
+                        'tooltip' => 'LBL_PREVIEW',
+                        'event' => 'list:preview:fire',
+                        'icon' => 'fa-eye',
+                        'acl_action' => 'view',
+                    ],
+            ],
+    ];
+  Do repair. You see - you have overrided actions buutons. Now only actions that we defined are awailable. And we did not touched the original view file.
+  
+- Great. Thanks. Can I override list of columns in such way?
+- Yes sure. Just put in the same file the following:
+
+foreach ($viewdefs['Bugs']['base']['view']['subpanel-for-myprm_project-myprm_project_bugs']['panels'] as $key => $panel) {
+    if ($panel['name'] == 'panel_header') {
+        $viewdefs['Bugs']['base']['view']['subpanel-for-myprm_project-myprm_project_bugs']['panels'][$key]['fields'] = [
+            0 =>
+                [
+                    'label' => 'LBL_LIST_NUMBER',
+                    'enabled' => true,
+                    'default' => true,
+                    'readonly' => true,
+                    'name' => 'bug_number',
+                ],
+            1 =>
+                [
+                    'label' => 'LBL_LIST_SUBJECT',
+                    'enabled' => true,
+                    'default' => true,
+                    'name' => 'name',
+                    'link' => true,
+                ],
+
+        ];
+    }
+}
+
+- Yes great! Now only two columns in the subpanel/ Thanks!
+
+
+
+
