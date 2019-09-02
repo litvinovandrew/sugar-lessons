@@ -1,0 +1,74 @@
+One Side:
+=========
+custom/Extension/modules/Bugs/Ext/Vardefs/bugs_jira_logs_link_def.php
+
+$dictionary['Bug']['fields']['bugs_jira_logs_link'] = [
+    'name' => 'bugs_jira_logs_link',
+    'type' => 'link',
+    'relationship' => 'bugs_jira_logs_rel',
+    'source' => 'non-db',
+    'vname' => 'LBL_BUGS_JIRA_LOGS_LINK',
+    'module' => 'jira_BugLogs', //important to have
+    'bean_name' => 'jira_BugLogs', //importanto to have
+];
+
+$dictionary['Bug']['relationships']['bugs_jira_logs_rel'] = array(
+    'lhs_module' => 'Bugs',
+    'lhs_table' => 'bugs',
+    'lhs_key' => 'id',
+    'rhs_module' => 'jira_BugLogs',
+    'rhs_table' => 'jira_buglogs',
+    'rhs_key' => 'sugar_bug_id',
+    'relationship_type' => 'one-to-many',
+);
+
+custom/Extension/modules/Bugs/Ext/clients/base/layouts/subpanels/bugs_jira_logs.php
+
+$viewdefs['Bugs']['base']['layout']['subpanels']['components'][] = array(
+    'layout' => 'subpanel',
+    'label' => 'LBL_BUG_JIRA_LOG_SUBPANEL',
+    'context' =>
+        array(
+            'link' => 'bugs_jira_logs_link',
+        ),
+);
+
+Many side:
+==========
+modules/jira_BugLogs/clients/base/views/subpanel-list/subpanel-list.php
+$module_name = 'jira_BugLogs';
+$viewdefs[$module_name]['base']['view']['subpanel-list'] = array(
+  'panels' => 
+  array(
+    array(
+      'name' => 'panel_header',
+      'label' => 'LBL_PANEL_1',
+      'fields' =>
+      array(
+        array(
+          'label' => 'LBL_NAME',
+          'enabled' => true,
+          'default' => true,
+          'name' => 'name',
+          'link' => true,
+        ),
+        array(
+          'label' => 'LBL_DATE_MODIFIED',
+          'enabled' => true,
+          'default' => true,
+          'name' => 'date_modified',
+        ),
+        //add another fields here
+      ),
+    ),
+  ),
+    'orderBy' => array(
+        'field' => 'date_modified',
+        'direction' => 'desc',
+    ),
+);
+
+
+
+
+
